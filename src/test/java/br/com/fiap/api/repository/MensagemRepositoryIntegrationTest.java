@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static br.com.fiap.api.utils.MensagemHelper.gerarMensagem;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -84,13 +84,4 @@ public class MensagemRepositoryIntegrationTest {
         assertThat(resultadosObitidos).hasSizeGreaterThan(0);
     }
 
-    private Mensagem gerarMensagem() {
-        return Mensagem.builder()
-                .usuario("Usuário da Mensagem")
-                .conteudo("Conteúdo da Mensagem")
-                .usuario("Nome usuário")
-                .dataCriacao(LocalDateTime.now())
-                .gostei(0)
-                .build();
-    }
 }

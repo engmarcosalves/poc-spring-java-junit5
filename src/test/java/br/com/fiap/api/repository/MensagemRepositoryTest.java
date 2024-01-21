@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
+import static br.com.fiap.api.utils.MensagemHelper.gerarMensagem;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -114,14 +114,4 @@ class MensagemRepositoryTest {
                 .containsExactlyInAnyOrder(mensagem1, mensagem2);
         verify(mensagemRepository, times(1)).findAll();
     }
-
-    private Mensagem gerarMensagem() {
-        return Mensagem.builder()
-                .usuario("Usuário da Mensagem")
-                .conteudo("Conteúdo da Mensagem")
-                .usuario("Nome usuário")
-                .dataCriacao(LocalDateTime.now())
-                .build();
-    }
-
 }
