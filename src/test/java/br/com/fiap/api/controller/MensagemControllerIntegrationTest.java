@@ -1,5 +1,6 @@
 package br.com.fiap.api.controller;
 
+import br.com.fiap.api.model.Mensagem;
 import io.restassured.RestAssured;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.util.UUID;
 
 import static br.com.fiap.api.utils.MensagemHelper.gerarMensagem;
 import static io.restassured.RestAssured.given;
@@ -89,7 +92,11 @@ public class MensagemControllerIntegrationTest {
 
         @Test
         void deveGerarExcecao_QuandoBuscarMensagem_IdNaoExiste() {
-            fail("teste nao implementado");
+            var id = "c0feb288-5c99-42fd-9be7-c59867714f3e";
+            when()
+                    .get("/mensagens/{id}", id)
+            .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
         }
     }
 
@@ -98,7 +105,21 @@ public class MensagemControllerIntegrationTest {
 
         @Test
         void devePermitirAlterarMensagem() {
-            fail("teste nao implementado");
+            var id = UUID.fromString("9ca7c72c-0957-4c7d-bdc2-325266842f21");
+            var mensagem = Mensagem.builder()
+                    .id(id)
+                    .usuario("Eve")
+                    .conteudo("Conteudo da Mensagem")
+                    .build();
+
+            given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(mensagem)
+            .when()
+                .put("/mensagens/{id}", id)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .body(matchesJsonSchemaInClasspath("schemas/mensagem.schema.json"));
         }
 
         @Test
