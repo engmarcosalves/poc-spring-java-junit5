@@ -38,13 +38,18 @@ public class MensagemControllerIntegrationTest {
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(mensagem)
-                    .log().all()
+//                    .log().all()
             .when()
                     .post("/mensagens")
             .then()
-                    .statusCode(HttpStatus.CREATED.value())
-                    .log().all();
+                    .statusCode(HttpStatus.CREATED.value());
+//                    .log().all();
 
+        }
+
+        @Test
+        void deveGerarExcecao_QuandoRegistrarMensagem_PayloadXML() {
+            fail("teste nao implementado");
         }
     }
 
@@ -61,6 +66,7 @@ public class MensagemControllerIntegrationTest {
             fail("teste nao implementado");
         }
     }
+
     @Nested
     class AlterarMensagem {
 
@@ -76,6 +82,11 @@ public class MensagemControllerIntegrationTest {
 
         @Test
         void deveGerarExcecao_QuandoAlterarMensagem_IdDaMensagemNovaApresentaValorDiferente() {
+            fail("teste nao implementado");
+        }
+
+        @Test
+        void deveGerarExcecao_QuandoAlterarMensagem_ApresentaPayloadComXML() {
             fail("teste nao implementado");
         }
 
@@ -103,6 +114,12 @@ public class MensagemControllerIntegrationTest {
         void devePermitirListarMensagens() {
             fail("teste nao implementado");
         }
+
+        @Test
+        void devePermitirListarMensagens_QuandoNaoInformadoPaginacao() {
+            fail("teste nao implementado");
+        }
+
 
     }
 

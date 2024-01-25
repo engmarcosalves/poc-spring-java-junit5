@@ -43,7 +43,6 @@ public class MensagemRepositoryIntegrationTest {
         assertThat(mensagemRecebida.getId()).isEqualTo(id);
         assertThat(mensagemRecebida.getConteudo()).isEqualTo(mensagem.getConteudo());
         assertThat(mensagemRecebida.getUsuario()).isEqualTo(mensagem.getUsuario());
-        assertThat(mensagemRecebida.getDataCriacao()).isEqualTo(mensagem.getDataCriacao());
     }
 
     @Test

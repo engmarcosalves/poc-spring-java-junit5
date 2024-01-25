@@ -20,7 +20,10 @@ public class MensagemController {
 
     private final MensagemService mensagemService;
 
-    @PostMapping()
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<Mensagem> registrarMensagem(@RequestBody Mensagem mensagem) {
         var mensagemRegistrada = mensagemService.registrarMensagem(mensagem);
         return new ResponseEntity<>(mensagemRegistrada, HttpStatus.CREATED);
@@ -49,7 +52,10 @@ public class MensagemController {
         return new ResponseEntity<>(mensagens, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<?> alterarMensagem(@PathVariable String id, @RequestBody Mensagem mensagem) {
         var uuid = UUID.fromString(id);
         try {

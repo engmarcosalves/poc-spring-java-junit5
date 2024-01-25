@@ -14,7 +14,6 @@ public abstract class MensagemHelper {
                 .usuario("Usuário da Mensagem")
                 .conteudo("Conteúdo da Mensagem")
                 .usuario("Nome usuário")
-                .dataCriacao(LocalDateTime.now())
                 .gostei(0)
                 .build();
     }

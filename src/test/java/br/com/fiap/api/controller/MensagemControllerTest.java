@@ -75,6 +75,18 @@ class MensagemControllerTest {
             verify(mensagemService, times(1))
                     .registrarMensagem(any(Mensagem.class));
         }
+
+        @Test
+        void deveGerarExcecao_QuandoRegistrarMensagem_PayloadXML() throws Exception {
+            String xmlPaylod = "<mensagem>Ana<usuario></usuario><conteudo>Mensagem do Conteudo</conteudo></mensagem>";
+
+            mockMvc.perform(post("/mensagens")
+                    .contentType(MediaType.APPLICATION_XML)
+                    .content(xmlPaylod))
+                .andExpect(status().isUnsupportedMediaType());
+
+            verify(mensagemService, never()).registrarMensagem(any(Mensagem.class));
+        }
     }
 
     @Nested
@@ -114,8 +126,25 @@ class MensagemControllerTest {
             //when(mensagemService.alterarMensagem(id, mensagem)).thenAnswer( i -> i.getArgument(1));  // TB FUNCIONA
             when(mensagemService.alterarMensagem(id, mensagem)).thenReturn(mensagem);
 
-            mockMvc.perform(put("/mensagens/{id}", id).contentType(MediaType.APPLICATION_JSON).content(asJsonString(mensagem))).andExpect(status().isAccepted());
+            mockMvc.perform(put("/mensagens/{id}", id)
+                            .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(mensagem)))
+                    .andExpect(status().isAccepted());
+
             verify(mensagemService, times(1)).alterarMensagem(id, mensagem);
+        }
+
+        @Test
+        void deveGerarExcecao_QuandoAlterarMensagem_PayloadXML() throws Exception {
+            var id = UUID.fromString("05c88d1b-8946-4862-ac27-eb70c5f0835e");
+            String xmlPaylod = "<mensagem><id>"+ id.toString() +"</id><usuario>Ana</usuario><conteudo>Mensagem do Conteudo</conteudo></mensagem>";
+
+            mockMvc.perform(put("/mensagens/{id}", id)
+                            .contentType(MediaType.APPLICATION_XML)
+                            .content(xmlPaylod))
+                    .andExpect(status().isUnsupportedMediaType());
+
+            verify(mensagemService, never()).alterarMensagem(any(UUID.class), any(Mensagem.class));
         }
 
         @Test
@@ -135,7 +164,8 @@ class MensagemControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(content().string(conteudoDaExcecao));
 
-            verify(mensagemService, times(1)).alterarMensagem(any(UUID.class), any(Mensagem.class));
+            verify(mensagemService, times(1))
+                    .alterarMensagem(any(UUID.class), any(Mensagem.class));
         }
 
         @Test
