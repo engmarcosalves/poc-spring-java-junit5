@@ -33,6 +33,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation('io.rest-assured:rest-assured:5.3.1')
+    testImplementation('io.rest-assured:json-schema-validator:5.3.1')
 //            {
 //        exclude group: 'org.apache.groovy', module: 'groovy'
 //        exclude group: 'org.apache.groovy', module: 'groovy-xml'

@@ -78,7 +78,7 @@ class MensagemControllerTest {
 
         @Test
         void deveGerarExcecao_QuandoRegistrarMensagem_PayloadXML() throws Exception {
-            String xmlPaylod = "<mensagem>Ana<usuario></usuario><conteudo>Mensagem do Conteudo</conteudo></mensagem>";
+            String xmlPaylod = "<mensagem><usuario>Ana</usuario><conteudo>Mensagem do Conteudo</conteudo></mensagem>";
 
             mockMvc.perform(post("/mensagens")
                     .contentType(MediaType.APPLICATION_XML)

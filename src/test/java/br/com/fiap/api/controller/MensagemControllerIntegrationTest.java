@@ -13,6 +13,10 @@ import org.springframework.http.MediaType;
 
 import static br.com.fiap.api.utils.MensagemHelper.gerarMensagem;
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasKey;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,18 +42,32 @@ public class MensagemControllerIntegrationTest {
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(mensagem)
-//                    .log().all()
             .when()
                     .post("/mensagens")
             .then()
-                    .statusCode(HttpStatus.CREATED.value());
-//                    .log().all();
+                    .log().all()
+                    .statusCode(HttpStatus.CREATED.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/mensagem.schema.json"));
+
 
         }
 
         @Test
         void deveGerarExcecao_QuandoRegistrarMensagem_PayloadXML() {
-            fail("teste nao implementado");
+            String xmlPaylod = "<mensagem><usuario>Ana</usuario><conteudo>Mensagem do Conteudo</conteudo></mensagem>";
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(xmlPaylod)
+                    .log().all()
+            .when()
+                    .post("/mensagens")
+            .then()
+                    .log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
+                    .body("error", equalTo("Bad Request"))
+                    .body("path", equalTo("/mensagens"));
         }
     }
 
@@ -58,7 +76,15 @@ public class MensagemControllerIntegrationTest {
 
         @Test
         void devePermitirBuscarMensagem() {
-            fail("teste nao implementado");
+
+            // OBS: tem que ser um ID real que tenha na base de dados, pois é um teste integrado.
+            var id = "7714f0bd-eb6c-4e8a-85f4-4d70674c1ba8";
+
+            when()
+                .get("/mensagens/{id}", id)
+            .then()
+                    .log().all()
+                .statusCode(HttpStatus.OK.value());
         }
 
         @Test
