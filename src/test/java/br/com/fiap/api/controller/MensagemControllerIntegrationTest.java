@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
@@ -18,12 +19,12 @@ import static br.com.fiap.api.utils.MensagemHelper.gerarMensagem;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasKey;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@ActiveProfiles("test")
 @Transactional
 public class MensagemControllerIntegrationTest {
 
@@ -124,17 +125,57 @@ public class MensagemControllerIntegrationTest {
 
         @Test
         void deveGerarExcecao_QuandoAlterarMensagem_IdNaoExiste() {
-            fail("teste nao implementado");
+            var id = UUID.fromString("9ca7c72c-0957-4c7d-bdc2-325266842f2");
+            var mensagem = Mensagem.builder()
+                    .id(id)
+                    .usuario("Eve")
+                    .conteudo("Conteudo da Mensagem")
+                    .build();
+
+            given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(mensagem)
+            .when()
+                .put("/mensagens/{id}", id)
+            .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(equalTo("Mensagem não encontrada"));
         }
 
         @Test
         void deveGerarExcecao_QuandoAlterarMensagem_IdDaMensagemNovaApresentaValorDiferente() {
-            fail("teste nao implementado");
+            var id = UUID.fromString("9ca7c72c-0957-4c7d-bdc2-325266842f21");
+            var mensagem = gerarMensagem();
+            mensagem.setId(UUID.fromString("9ca7c72c-0957-4c7d-bdc2-325266842f2A"));
+
+            given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(mensagem)
+            .when()
+                .put("/mensagens/{id}", id)
+            .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .log().all()
+                .body(equalTo("mensagem atualizada não apresenta o ID correto"));
         }
 
         @Test
         void deveGerarExcecao_QuandoAlterarMensagem_ApresentaPayloadComXML() {
-            fail("teste nao implementado");
+            var id = UUID.fromString("9ca7c72c-0957-4c7d-bdc2-325266842f21");
+            String xmlPaylod = "<mensagem><id>9ca7c72c-0957-4c7d-bdc2-325266842f21</id><usuario>Ana</usuario><conteudo>Mensagem do Conteudo</conteudo></mensagem>";
+
+            given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(xmlPaylod)
+            .when()
+                .put("/mensagens/{id}", id)
+            .then()
+                .log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
+                .body("error", equalTo("Bad Request"))
+                .body("path", equalTo("/mensagens/9ca7c72c-0957-4c7d-bdc2-325266842f21"))
+                .body("path", containsString("/mensagens"));
         }
 
     }
@@ -144,12 +185,25 @@ public class MensagemControllerIntegrationTest {
 
         @Test
         void devePermitirRemoverMensagem() {
-            fail("teste nao implementado");
+            var id = UUID.fromString("52ea107b-7b58-446f-bbde-22a20cb8c2bc");
+
+            when()
+                .delete("/mensagens/{id}", id)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo("mensagem removida"));
         }
 
         @Test
         void deveGerarExcecao_QuandoRemoverMensagem_IdNaoExiste() {
-            fail("teste nao implementado");
+            var id = UUID.fromString("52ea107b-7b58-446f-bbde-22a20cb8c2b");
+
+            when()
+                    .delete("/mensagens/{id}", id)
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body(equalTo("Mensagem não encontrada"));
         }
 
     }
@@ -159,15 +213,27 @@ public class MensagemControllerIntegrationTest {
 
         @Test
         void devePermitirListarMensagens() {
-            fail("teste nao implementado");
+            given()
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+            .when()
+                .get("/mensagens")
+            .then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(matchesJsonSchemaInClasspath("schemas/mensagem.page.schema.json"));
         }
 
         @Test
         void devePermitirListarMensagens_QuandoNaoInformadoPaginacao() {
-            fail("teste nao implementado");
+            given()
+            .when()
+                .get("/mensagens")
+            .then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(matchesJsonSchemaInClasspath("schemas/mensagem.page.schema.json"));
         }
-
-
     }
 
 }

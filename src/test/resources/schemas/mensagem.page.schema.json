@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "required": [
+    "content",
+    "pageable",
+    "totalPages",
+    "totalElements",
+    "last",
+    "size",
+    "number",
+    "sort",
+    "numberOfElements",
+    "first",
+    "empty"
+  ],
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "usuario",
+          "conteudo",
+          "dataCriacao",
+          "gostei"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "usuario": {
+            "type": "string"
+          },
+          "conteudo": {
+            "type": "string"
+          },
+          "dataCriacao": {
+            "type": "string"
+          },
+          "gostei": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "pageable": {
+      "type": "object",
+      "required": [
+        "pageNumber",
+        "pageSize",
+        "sort",
+        "offset",
+        "paged",
+        "unpaged"
+      ],
+      "properties": {
+        "pageNumber": {
+          "type": "integer"
+        },
+        "pageSize": {
+          "type": "integer"
+        },
+        "sort": {
+          "type": "object",
+          "required": [
+            "sorted",
+            "empty",
+            "unsorted"
+          ],
+          "properties": {
+            "sorted": {
+              "type": "boolean"
+            },
+            "empty": {
+              "type": "boolean"
+            },
+            "unsorted": {
+              "type": "boolean"
+            }
+          }
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "paged": {
+          "type": "boolean"
+        },
+        "unpaged": {
+          "type": "boolean"
+        }
+      }
+    },
+    "totalPages": {
+      "type": "integer"
+    },
+    "totalElements": {
+      "type": "integer"
+    },
+    "last": {
+      "type": "boolean"
+    },
+    "size": {
+      "type": "integer"
+    },
+    "number": {
+      "type": "integer"
+    },
+    "sort": {
+      "type": "object",
+      "required": [
+        "sorted",
+        "empty",
+        "unsorted"
+      ],
+      "properties": {
+        "sorted": {
+          "type": "boolean"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "unsorted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "numberOfElements": {
+      "type": "integer"
+    },
+    "first": {
+      "type": "boolean"
+    },
+    "empty": {
+      "type": "boolean"
+    }
+  }
+}
